@@ -1,0 +1,165 @@
+const mongoose = require("mongoose");
+const { isWebUri } = require("valid-url");
+const UrlModel = require("../models/urlModel");
+
+// get all Urls
+const getUrls = async (req, res) => {
+  const user_id = req.user._id;
+
+  const url = await UrlModel.find({ user_id }).sort({ createdAt: -1 });
+
+  res.status(200).json(url);
+};
+
+// get Long Url from single Url
+const getLongUrl = async (req, res) => {
+  const { id: short_url_id } = req.params;
+
+  const short_url_temp = "localhost:3000/" + short_url_id;
+
+  const url = await UrlModel.find({ short_url: short_url_temp });
+
+  if (url == 0) {
+    return res.status(404).json({ error: "No such short_url" });
+  }
+
+  const { long_url } = url.length > 0 ? url[0] : {};
+  res.status(200).json({ long_url });
+};
+
+// create new Url
+const createShortUrl = async (req, res) => {
+  const { title, long_url, preferred_alias } = req.body;
+
+  let emptyFields = [];
+
+  if (!title) {
+    emptyFields.push("title");
+  }
+  if (!long_url) {
+    emptyFields.push("long_url");
+  }
+
+  if (emptyFields.length > 0) {
+    return res
+      .status(400)
+      .json({ error: "Please fill in the fields ", emptyFields });
+  }
+
+  if (!isWebUri(long_url)) {
+    emptyFields.push("long_url");
+    return res.status(400).json({
+      error: "Please provide a URL in the form of https://....",
+      emptyFields,
+    });
+  }
+
+  var short_url;
+  var alias;
+
+  if (preferred_alias) {
+    if (preferred_alias.length !== 6) {
+      emptyFields.push("preferred_alias");
+      return res.status(404).json({
+        error: "The preferred alias must contain 6 characters",
+        emptyFields,
+      });
+    }
+
+    alias = "localhost:3000/" + preferred_alias;
+    const existingUrl = await UrlModel.find({ short_url: alias });
+
+    if (existingUrl.length > 0) {
+      emptyFields.push("preferred_alias");
+      return res.status(404).json({
+        error: "The preferred alias you selected already exists",
+        emptyFields,
+      });
+    }
+
+    short_url = alias;
+  } else {
+    var existingUrl2;
+    do {
+      var generatedKey = generateShortID(6);
+      short_url = "localhost:3000/" + generatedKey;
+      existingUrl2 = await UrlModel.find({ short_url: short_url });
+    } while (existingUrl2.length > 0);
+    // TODO: add the url after deploying on vercel
+  }
+
+  try {
+    const user_id = req.user._id;
+
+    const url = await UrlModel.create({
+      title,
+      long_url,
+      short_url,
+      user_id,
+    });
+
+    res.status(200).json(url);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+// delete a UrlModel
+const deleteUrl = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ error: "No such url" });
+  }
+
+  const url = await UrlModel.findOneAndDelete({ _id: id });
+
+  if (!url) {
+    return res.status(404).json({ error: "No such url" });
+  }
+
+  res.status(200).json(url);
+};
+
+// update a UrlModel
+const updateUrl = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ error: "No such url" });
+  }
+
+  const url = await UrlModel.findOneAndUpdate(
+    { _id: id },
+    {
+      ...req.body,
+    }
+  );
+
+  if (!url) {
+    return res.status(404).json({ error: "No such url" });
+  }
+
+  res.status(200).json(url);
+};
+
+const generateShortID = (length) => {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#";
+  let shortID = "";
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    shortID += characters.charAt(randomIndex);
+  }
+
+  return shortID;
+};
+
+module.exports = {
+  createShortUrl,
+  getUrls,
+  getLongUrl,
+  deleteUrl,
+  updateUrl,
+};

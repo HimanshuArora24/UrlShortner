@@ -4,7 +4,7 @@ const NotFound = ({ short_id }) => {
   const [longUrl, setLongUrl] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:4000/api/urls/getLongUrl/${short_id}`)
+    fetch(`https://url-shortner-backend-himanshu-aroras-projects.vercel.app/api/urls/getLongUrl/${short_id}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.long_url) {

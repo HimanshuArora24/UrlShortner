@@ -12,7 +12,7 @@ const Home = () => {
 
   useEffect(() => {
     const fetchUrls = async () => {
-      const response = await fetch('http://localhost:4000/api/urls', {
+      const response = await fetch('https://url-shortner-backend-himanshu-aroras-projects.vercel.app/api/urls', {
         headers: {
           'Authorization': `Bearer ${user.token}`
         }

@@ -27,7 +27,7 @@ const UrlForm = () => {
     };
 
     const response = await fetch(
-      "http://localhost:4000/api/urls/createShortUrl",
+      "https://url-shortner-backend-himanshu-aroras-projects.vercel.app/api/urls/createShortUrl",
       {
         method: "POST",
         body: JSON.stringify(url),

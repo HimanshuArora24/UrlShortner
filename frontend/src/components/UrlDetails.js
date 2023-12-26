@@ -18,7 +18,7 @@ const UrlDetails = ({ url }) => {
     }
 
     const response = await fetch(
-      "http://localhost:4000/api/urls/" + url._id,
+      "https://url-shortner-backend-himanshu-aroras-projects.vercel.app/api/urls/" + url._id,
       {
         method: "DELETE",
         headers: {

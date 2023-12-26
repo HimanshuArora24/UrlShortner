@@ -15,7 +15,7 @@ const getUrls = async (req, res) => {
 const getLongUrl = async (req, res) => {
   const { id: short_url_id } = req.params;
 
-  const short_url_temp = "localhost:3000/" + short_url_id;
+  const short_url_temp = "https://url-shortner-himanshu-aroras-projects.vercel.app/" + short_url_id;
 
   const url = await UrlModel.find({ short_url: short_url_temp });
 
@@ -66,7 +66,7 @@ const createShortUrl = async (req, res) => {
       });
     }
 
-    alias = "localhost:3000/" + preferred_alias;
+    alias = "https://url-shortner-himanshu-aroras-projects.vercel.app/" + preferred_alias;
     const existingUrl = await UrlModel.find({ short_url: alias });
 
     if (existingUrl.length > 0) {
@@ -82,7 +82,7 @@ const createShortUrl = async (req, res) => {
     var existingUrl2;
     do {
       var generatedKey = generateShortID(6);
-      short_url = "localhost:3000/" + generatedKey;
+      short_url = "https://url-shortner-himanshu-aroras-projects.vercel.app/" + generatedKey;
       existingUrl2 = await UrlModel.find({ short_url: short_url });
     } while (existingUrl2.length > 0);
     // TODO: add the url after deploying on vercel

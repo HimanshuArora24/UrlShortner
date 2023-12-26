@@ -9,13 +9,13 @@ const cors = require("cors")
 // express app
 const app = express();
 
-// app.use(
-//   cors({
-//     origin: ["https://workout-buddy-frontend-himanshu-aroras-projects.vercel.app"],
-//     methods: ["POST", "GET", "PATCH", "DELETE"],
-//     credentials: true,
-//   })
-// );
+app.use(
+  cors({
+    origin: ["https://url-shortner-himanshu-aroras-projects.vercel.app"],
+    methods: ["POST", "GET", "PATCH", "DELETE"],
+    credentials: true,
+  })
+);
 
 app.use(cors());
 

@@ -46,6 +46,13 @@ const createShortUrl = async (req, res) => {
       .json({ error: "Please fill in the fields ", emptyFields });
   }
 
+  if(long_url.includes('url-shortner-himanshu-aroras-projects.vercel.app')){
+    emptyFields.push("long_url");
+    return res
+      .status(400)
+      .json({ error: "Url should not be pointing to this website domain.", emptyFields });
+  }
+
   if (!isWebUri(long_url)) {
     emptyFields.push("long_url");
     return res.status(400).json({

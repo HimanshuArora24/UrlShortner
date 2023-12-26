@@ -1,6 +1,6 @@
 # URL Shortner
 
-An application enabling users to create shortened URLs and maintain their URL shortening history. The app requires user authentication, ensuring a personalized experience for each user.
+An application enabling users to shorten URLs and maintain their URL shortening history. The app requires user authentication, ensuring a personalized experience for each user.
 
 Senstive information such as password are stored in encrypted format in database using bcrypt. The sessions are token based using jwt.
 
@@ -13,6 +13,7 @@ Senstive information such as password are stored in encrypted format in database
 
 ## Deployment
 
+The application is deployed via Vercel: [https://url-shortner-himanshu-aroras-projects.vercel.app/](https://url-shortner-himanshu-aroras-projects.vercel.app/)
 
 ## Cloning
 

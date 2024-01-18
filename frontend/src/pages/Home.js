@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useUrlsContext } from "../hooks/useUrlContext";
 import { useAuthContext } from "../hooks/useAuthContext";
+import { useLogout } from "../hooks/useLogout";
 
 // components
 import UrlDetails from '../components/UrlDetails';
@@ -9,6 +10,7 @@ import UrlAddtionForm from '../components/UrlAdditionForm';
 const Home = () => {
   const { urls, dispatch } = useUrlsContext()
   const { user } = useAuthContext()
+  const { logout } = useLogout()
 
   useEffect(() => {
     const fetchUrls = async () => {
@@ -21,6 +23,8 @@ const Home = () => {
 
       if(response.ok) {
         dispatch({type: 'SET_URLS', payload: json})
+      }else if (response.status === 401) {
+        logout();
       }
     }
 
